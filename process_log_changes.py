@@ -24,17 +24,29 @@ def get_commits(data):
         except IndexError:
             break
     return commits
+    
+def get_authors(commits):
+    authors = {}
+    for commit in commits: #loop through all the commits in the commits list
+        author = commit['author'] #create new variable called author from the dictionary element author
+        if author not in authors: #if the author occurs once, assign 1
+            authors[author] = 1
+        else:
+            authors[author] = authors[author] + 1 #if the author occurs multiple times, increment the count by 1
+    return authors
 
 if __name__ == '__main__':
     changes_file = 'changes_python.log' #open the file
     data = read_file(changes_file) #read all the lines
     commits = get_commits(data) #creating list of dictionaries
+    authors = get_authors(commits) #creating a list of commits by author
 	
 	#printing random data just to see if things are working correctly	
     print(len(data)) # no of lines read
     print(commits[0:2]) # print the first 3 commits
     print(commits[1]['author']) #print the author of the the 2nd commit
     print(len(commits)) #print the number of commits
+    print authors
 
 
 	
