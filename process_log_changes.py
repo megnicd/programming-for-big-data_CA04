@@ -1,3 +1,6 @@
+import time
+import datetime
+
 def read_file(changes_file):
     # use strip to strip out spaces and trim the line.
     data = [line.strip() for line in open(changes_file, 'r')]
@@ -12,11 +15,16 @@ def get_commits(data):
         try:
             # parse each of the commits and put them into a list of commits
             details = data[index + 1].split('|') #split all data from line 1 on pipe, save to a variable called details
+            year = int((details[2][0:5]).strip()) #identifying year from the date line in details so i can split further in the dictionary
+            month = int((details[2][6:8]).strip())#identifying month from the date line in details so i can split further in the dictionary
+            day = int((details[2][9:11]).strip())#identifying day from the date line in details so i can split further in the dictionary
             # creating a dictionary called commit with each element of details included
             commit = {'revision': details[0].strip().strip('r'),	#stripping spaces, and 'r' in the revision element 
                 'author': details[1].strip(),
-                'date': details[2].strip(),
-                'number_of_lines': details[3].strip().split(' ')[1]
+                # 'full-date': details[2].strip(),
+                'date': datetime.date(year, month, day).strftime("%Y-%m-%d"),
+                'week': datetime.date(year, month, day).strftime("%W"),
+                'number_of_lines': details[3].strip().split(' ')[0]
             }
             # add details to the list of commits
             commits.append(commit)
@@ -41,9 +49,9 @@ if __name__ == '__main__':
     commits = get_commits(data) #creating list of dictionaries
     authors = get_authors(commits) #creating a list of commits by author
 	
-	#printing random data just to see if things are working correctly	
+	# printing random data just to see if things are working correctly	
     print(len(data)) # no of lines read
-    print(commits[0:2]) # print the first 3 commits
+    print(commits[0]) # print the first 3 commits
     print(commits[1]['author']) #print the author of the the 2nd commit
     print(len(commits)) #print the number of commits
     print sorted(authors.items(), key=lambda x:x[1], reverse=True)[:5] #printing a list of the top 5 authors
