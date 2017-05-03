@@ -46,10 +46,4 @@ if __name__ == '__main__':
     print(commits[0:2]) # print the first 3 commits
     print(commits[1]['author']) #print the author of the the 2nd commit
     print(len(commits)) #print the number of commits
-    print authors
-
-
-	
-
-
-
+    print sorted(authors.items(), key=lambda x:x[1], reverse=True)[:5] #printing a list of the top 5 authors
