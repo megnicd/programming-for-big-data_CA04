@@ -1,5 +1,6 @@
 import time
 import datetime
+from collections import defaultdict
 
 def read_file(changes_file):
     # use strip to strip out spaces and trim the line.
@@ -24,7 +25,7 @@ def get_commits(data):
                 # 'full-date': details[2].strip(),
                 'date': datetime.date(year, month, day).strftime("%Y-%m-%d"),
                 'week': datetime.date(year, month, day).strftime("%W"),
-                'number_of_lines': details[3].strip().split(' ')[0]
+                'number_of_lines': int(details[3].strip().split(' ')[0])
             }
             # add details to the list of commits
             commits.append(commit)
@@ -42,16 +43,27 @@ def get_authors(commits):
         else:
             authors[author] = authors[author] + 1 #if the author occurs multiple times, increment the count by 1
     return authors
+    
+#using defaultdict to group number of lines by author by looping through the commits dict with author as the key
+#using the iadd method to append the number of lines 
+    def get_lines(commits):
+    lines = defaultdict(int)
+    for x in commits:
+        lines[x['author']] += x['number_of_lines']
+    return lines
 
 if __name__ == '__main__':
     changes_file = 'changes_python.log' #open the file
     data = read_file(changes_file) #read all the lines
-    commits = get_commits(data) #creating list of dictionaries
+    commits = get_commits(data) #creating list of dictionaries, one commit is one element of the dictionary
     authors = get_authors(commits) #creating a list of commits by author
+    lines = get_lines(commits)
 	
 	# printing random data just to see if things are working correctly	
-    print(len(data)) # no of lines read
-    print(commits[0]) # print the first 3 commits
-    print(commits[1]['author']) #print the author of the the 2nd commit
-    print(len(commits)) #print the number of commits
-    print sorted(authors.items(), key=lambda x:x[1], reverse=True)[:5] #printing a list of the top 5 authors
+    # print(len(data)) # no of lines read
+    # print(commits[0]) # print the first 3 commits
+    # print(commits[0]['number_of_lines']) #print the author of the the 2nd commit
+    # print(len(commits)) #print the number of commits
+    print sorted(authors.items(), key=lambda x:x[1], reverse=True)[:5] #printing a list of the top 5 authors by no. of commits
+    print sorted(lines.items(), key=lambda x:x[1], reverse=True)[:5] #printing a list of the top 5 by no. of lines
+
