@@ -1,5 +1,6 @@
 import time
 import datetime
+import csv
 from collections import defaultdict
 
 def read_file(changes_file):
@@ -46,7 +47,7 @@ def get_authors(commits):
     
 #using defaultdict to group number of lines by author by looping through the commits dict with author as the key
 #using the iadd method to append the number of lines 
-    def get_lines(commits):
+def get_lines(commits):
     lines = defaultdict(int)
     for x in commits:
         lines[x['author']] += x['number_of_lines']
@@ -62,8 +63,15 @@ if __name__ == '__main__':
 	# printing random data just to see if things are working correctly	
     # print(len(data)) # no of lines read
     # print(commits[0]) # print the first 3 commits
-    # print(commits[0]['number_of_lines']) #print the author of the the 2nd commit
+    # print(commits[421]['number_of_lines']) #print the author of the the 2nd commit
     # print(len(commits)) #print the number of commits
-    print sorted(authors.items(), key=lambda x:x[1], reverse=True)[:5] #printing a list of the top 5 authors by no. of commits
-    print sorted(lines.items(), key=lambda x:x[1], reverse=True)[:5] #printing a list of the top 5 by no. of lines
+    # print sorted(authors.items(), key=lambda x:x[1], reverse=True)[:5] #printing a list of the top 5 authors by no. of commits
+    # print sorted(lines.items(), key=lambda x:x[1], reverse=True)[:5] #printing a list of the top 5 by no. of lines
+    
+#outputting the file to csv
+keys = commits[0].keys()
+with open('test.csv', 'wb') as output_file:
+    dict_writer = csv.DictWriter(output_file, keys)
+    dict_writer.writeheader()
+    dict_writer.writerows(commits)
 
