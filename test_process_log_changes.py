@@ -2,6 +2,7 @@ import unittest
 from collections import defaultdict
 from process_log_changes import get_commits, read_file #,get_lines, get_weekly_commits
 
+#IN ORDER FOR THESE TO WORK, ENSURE THAT LINES 99-127 IN PROCESS_LOG_CHANGES ARE COMMENTED OUT
 class TestCommits(unittest.TestCase):
 
     def setUp(self):
