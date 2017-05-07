@@ -1,10 +1,10 @@
-import time
-import datetime
-import csv
-from collections import defaultdict
+import datetime # will use to split dates out into the correct format
+from collections import defaultdict # will use to group lines by author
+import csv #will need to write processed file to csv
 
+#reading in the the file
 def read_file(changes_file):
-    # use strip to strip out spaces and trim the line.
+    #using strip to strip out spaces and trim the line.
     data = [line.strip() for line in open(changes_file, 'r')]
     return data
 
@@ -38,6 +38,7 @@ def get_commits(data):
             break
     return commits
     
+#count commits per author
 def get_authors(commits):
     authors = {}
     for commit in commits: #loop through all the commits in the commits list
@@ -48,6 +49,7 @@ def get_authors(commits):
             authors[author] = authors[author] + 1 #if the author occurs multiple times, increment the count by 1
     return authors
     
+#counting commits per week
 def get_weekly_commits(commits):
     weekly_commits = {}
     for commit in commits: #loop through all the commits in the commits list
@@ -58,6 +60,7 @@ def get_weekly_commits(commits):
             weekly_commits[weekly_commit] = weekly_commits[weekly_commit] + 1 #if the author occurs multiple times, increment the count by 1
     return weekly_commits
     
+#counting commits per day           
 def get_daily_commits(commits):
     daily_commits = {}
     for commit in commits: #loop through all the commits in the commits list
@@ -76,11 +79,13 @@ def get_lines(commits):
         lines[x['author']] += x['number_of_lines']
     return lines
     
+#function to print my summary tuples into columns for readability in cmdpromt
+#using the lenth of each item in the tuple to define the width and adding a cushion of 3 for readability    
 def tuple_to_column(my_tuple_list):    
     width = max(len(e) for t in my_tuple_list for e in t[:-1]) + 3 
     format=('%%-%ds' % width) * len(my_tuple_list[0])
     return '\n'.join(format % tuple(t) for t in my_tuple_list)
-               
+
 if __name__ == '__main__':
     changes_file = 'changes_python.log' #open the file
     data = read_file(changes_file) #read all the lines
@@ -89,21 +94,36 @@ if __name__ == '__main__':
     lines = get_lines(commits)
     daily_commits = get_daily_commits(commits)
     weekly_commits = get_weekly_commits(commits)
-	# printing random data just to see if things are working correctly	
-    # print(len(data)) # no of lines read
-    # print(commits[3]) # print the first 3 commits
-    # print(commits[421]['number_of_lines']) #print the author of the the 2nd commit
-    # print(len(commits)) #print the number of commits
-
-    print 'The top 5 authors, ranked by the number of commits are: \n'
-    print tuple_to_column(sorted(authors.items(), key=lambda x:x[1], reverse=True)[:5])
-    print '\nThe top 5 authors, ranked by the number of comments are: \n'
-    print tuple_to_column(sorted(lines.items(), key=lambda x:x[1], reverse=True)[:5])
-    print '\nThe most productive 5 weeks of the year (2015) ranked by the number of commits are: \n'
-    print tuple_to_column(sorted(weekly_commits.items(), key=lambda x:x[1], reverse=True)[:5])
-    print '\nThe most productive 5 days of the year ranked by the number of commits are: \n'
-    print tuple_to_column(sorted(daily_commits.items(), key=lambda x:x[1], reverse=True)[:5])
-   
+    sorted_dates = sorted([x['date'] for x in commits]) # i know this list is the same length as my list of commits, so i can use the index for 1st and last dates
     
+#using string formatting to print and summarise the file in the terminal
+print '\nThere are {} number of lines of data in this log file, all of which contain data relating to {} github commits.'.format(len(data), len(commits))
+print 'These commits were made by {} different authors between {} and {}.\n'.format(len(authors), sorted_dates[0], sorted_dates[421])
+print '***************************************************************************************************************'
+print 'The top 5 authors, ranked by the number of commits are: \n'
+print tuple_to_column(sorted(authors.items(), key=lambda x:x[1], reverse=True)[:5])# using lambda to return key-value pairs from mydict, from highest to lowest
+print '\nThomas and Jimmy are by far the most productive developers on this project in terms of commits.'
+print '***************************************************************************************************************'
+print 'The top 5 authors, ranked by the number of comments are: \n'
+print tuple_to_column(sorted(lines.items(), key=lambda x:x[1], reverse=True)[:5])
+print '\nThomas and Jimmy also made the most comments on this project.'
+print '***************************************************************************************************************'
+print 'The most productive 5 weeks of the year (2015) ranked by the number of commits are: \n'
+print tuple_to_column(sorted(weekly_commits.items(), key=lambda x:x[1], reverse=True)[:5])
+print '\nThe most commits were made in week 28 of 2015.'
+print '***************************************************************************************************************'
+print 'The most productive 5 days of the year ranked by the number of commits are: \n'
+print tuple_to_column(sorted(daily_commits.items(), key=lambda x:x[1], reverse=True)[:5])
+print '\nThe most commits were made on August 4th, 2015.'
+print '***************************************************************************************************************'
+
+#writing the file to .csv for further processing
+#each key in the dict will print to a column
+#each dict in the list of dicts will print to a row
+keys = commits[0].keys()
+with open('log_changes.csv', 'wb') as output_file:
+    dict_writer = csv.DictWriter(output_file, keys)
+    dict_writer.writeheader()
+    dict_writer.writerows(commits)
 
 
