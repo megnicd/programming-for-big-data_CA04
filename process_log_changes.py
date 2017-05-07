@@ -97,33 +97,33 @@ if __name__ == '__main__':
     sorted_dates = sorted([x['date'] for x in commits]) # i know this list is the same length as my list of commits, so i can use the index for 1st and last dates
     
 #using string formatting to print and summarise the file in the terminal
-# print '\nThere are {} number of lines of data in this log file, all of which contain data relating to {} github commits.'.format(len(data), len(commits))
-# print 'These commits were made by {} different authors between {} and {}.\n'.format(len(authors), sorted_dates[0], sorted_dates[421])
-# print '***************************************************************************************************************'
-# print 'The top 5 authors, ranked by the number of commits are: \n'
-# print tuple_to_column(sorted(authors.items(), key=lambda x:x[1], reverse=True)[:5])# using lambda to return key-value pairs from mydict, from highest to lowest
-# print '\nThomas and Jimmy are by far the most productive developers on this project in terms of commits.'
-# print '***************************************************************************************************************'
-# print 'The top 5 authors, ranked by the number of comments are: \n'
-# print tuple_to_column(sorted(lines.items(), key=lambda x:x[1], reverse=True)[:5])
-# print '\nThomas and Jimmy also made the most comments on this project.'
-# print '***************************************************************************************************************'
-# print 'The most productive 5 weeks of the year (2015) ranked by the number of commits are: \n'
-# print tuple_to_column(sorted(weekly_commits.items(), key=lambda x:x[1], reverse=True)[:5])
-# print '\nThe most commits were made in week 28 of 2015.'
-# print '***************************************************************************************************************'
-# print 'The most productive 5 days of the year ranked by the number of commits are: \n'
-# print tuple_to_column(sorted(daily_commits.items(), key=lambda x:x[1], reverse=True)[:5])
-# print '\nThe most commits were made on August 4th, 2015.'
-# print '***************************************************************************************************************'
+print '\nThere are {} number of lines of data in this log file, all of which contain data relating to {} github commits.'.format(len(data), len(commits))
+print 'These commits were made by {} different authors between {} and {}.\n'.format(len(authors), sorted_dates[0], sorted_dates[421])
+print '***************************************************************************************************************'
+print 'The top 5 authors, ranked by the number of commits are: \n'
+print tuple_to_column(sorted(authors.items(), key=lambda x:x[1], reverse=True)[:5])# using lambda to return key-value pairs from mydict, from highest to lowest
+print '\nThomas and Jimmy are by far the most productive developers on this project in terms of commits.'
+print '***************************************************************************************************************'
+print 'The top 5 authors, ranked by the number of comments are: \n'
+print tuple_to_column(sorted(lines.items(), key=lambda x:x[1], reverse=True)[:5])
+print '\nThomas and Jimmy also made the most comments on this project.'
+print '***************************************************************************************************************'
+print 'The most productive 5 weeks of the year (2015) ranked by the number of commits are: \n'
+print tuple_to_column(sorted(weekly_commits.items(), key=lambda x:x[1], reverse=True)[:5])
+print '\nThe most commits were made in week 28 of 2015.'
+print '***************************************************************************************************************'
+print 'The most productive 5 days of the year ranked by the number of commits are: \n'
+print tuple_to_column(sorted(daily_commits.items(), key=lambda x:x[1], reverse=True)[:5])
+print '\nThe most commits were made on August 4th, 2015.'
+print '***************************************************************************************************************'
 
 #writing the file to .csv for further processing
 #each key in the dict will print to a column
 #each dict in the list of dicts will print to a row
-# keys = commits[0].keys()
-# with open('log_changes.csv', 'wb') as output_file:
-    # dict_writer = csv.DictWriter(output_file, keys)
-    # dict_writer.writeheader()
-    # dict_writer.writerows(commits)
+keys = commits[0].keys()
+with open('log_changes.csv', 'wb') as output_file:
+    dict_writer = csv.DictWriter(output_file, keys)
+    dict_writer.writeheader()
+    dict_writer.writerows(commits)
 
 
